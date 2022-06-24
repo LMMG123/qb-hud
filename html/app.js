@@ -30,6 +30,7 @@ const app = Vue.createApp({
       isPointerShowChecked: this.initIsPointerShowChecked(),
       isDegreesShowChecked: this.initIsDegreesShowChecked(),
       isCineamticModeChecked: this.initIsCineamticModeChecked(),
+      isShowPostalsChecked: this.initIsShowPostalsChecked()
 		};
 	},
   setup () {
@@ -154,6 +155,9 @@ const app = Vue.createApp({
 		},
     isCineamticModeChecked: function() {
 			localStorage.setItem("isCineamticModeChecked", this.isCineamticModeChecked);
+                },
+    isShowPostalsChecked: function() {
+                        localStorage.setItem("isShowPostalsChecked", this.isShowPostalsChecked);
 		},
 	},
   methods: {
@@ -373,6 +377,14 @@ const app = Vue.createApp({
 				return stored == 'true';
 			}
 		},
+    initIsShowPostalsChecked: function() {
+                        const stored = localStorage.getItem("isShowPostalsChecked");
+                        if (stored === null) {
+                                return false;
+                        } else {
+                                return stored == 'true';
+                        }
+                },
     resetStorage: function(event) {
       targetId = event.currentTarget.id;
       localStorage.clear();
@@ -490,6 +502,9 @@ const app = Vue.createApp({
       targetId = event.currentTarget.id;
       cinematicMode()
     },
+    showPostals: function(event) {
+      targetId = event.currentTarget.id;
+      showPostals()
   },
   mounted() {
     this.listener = window.addEventListener("message", (event) => {
@@ -601,6 +616,9 @@ function showDegreesNum() {
 }
 function cinematicMode() {
   $.post('https://qb-hud/cinematicMode');
+}
+function showPostals() {
+  $.post('https://qb-hud/showPostals');
 }
 
 $(document).ready(function () {
@@ -1095,6 +1113,7 @@ const baseplateHud = {
       showStreets: true,
       showPointer: true,
       showDegrees: true,
+      showPostals: true,
     };
   },
   destroyed() {
@@ -1127,6 +1146,7 @@ const baseplateHud = {
       this.showStreets = data.showStreets;
       this.showPointer = data.showPointer;
       this.showDegrees = data.showDegrees;
+      this.showPostals = data.showPostals;
       if (data.showCompass == true) {
         this.showCompass = true;
       } else {
@@ -1146,6 +1166,11 @@ const baseplateHud = {
         this.showDegrees = true;
       } else {
         this.showDegrees = false;
+      }
+      if (data.showPostals == true) {
+        this.showPostals = true;
+      } else {
+        this.showPostals = false;
       }
     },
   },
